@@ -1,8 +1,8 @@
-<project name="Jaka" default="dist" basedir=".">
+<project name="Baysick" default="dist" basedir=".">
   <property environment="env"/>
 
-  <property name="package.name"   value = "fogus.jaka"/>
-  <property name="module.name"    value = "jaka"/>
+  <property name="package.name"   value = "fogus.baysick"/>
+  <property name="module.name"    value = "baysick"/>
 
   <property name="dist.home"      value="${basedir}/dist"/>
   <property name="src.home"       value="${basedir}/src"/>
@@ -65,17 +65,17 @@
     <mkdir dir="${dist.home}"/>
 
     <copy todir="${dist.home}" includeEmptyDirs="false" preservelastmodified="yes" overwrite="yes" flatten="false">
-      <fileset dir="${src.home}" includes="jaka"/>
+      <fileset dir="${src.home}" includes="baysick"/>
     </copy>
 
-    <chmod file="${dist.home}/jaka" perm="ugo+rx"/>
+    <chmod file="${dist.home}/baysick" perm="ugo+rx"/>
   </target>
 
   <target name="jar" depends="compile">
     <jar destfile="${archive.home}/${archive.name}" basedir="${classes.home}">
       <manifest>
         <attribute name="Author" value="Fogus"/>
-        <attribute name="Main-Class" value="fogus.jaka.Jaka"/>
+        <attribute name="Main-Class" value="fogus.baysick.Repl"/>
       </manifest>
     </jar>
   </target>
