@@ -1,9 +1,11 @@
 package fogus.baysick {
+  import scala.collection.mutable.HashMap
+
   class Baysick {
     abstract sealed class BasicLine
     case class PrintLine(num: Int, s: String) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
-    val lines = new scala.collection.mutable.HashMap[Int, BasicLine]
+    val lines = new HashMap[Int, BasicLine]
 
     case class linebuilder(num: Int) {
       def GOTO(to: Int) = lines(num) = GotoLine(num, to)
