@@ -1,0 +1,116 @@
+<project name="Jaka" default="dist" basedir=".">
+  <property environment="env"/>
+
+  <property name="package.name"   value = "fogus.jaka"/>
+  <property name="module.name"    value = "jaka"/>
+
+  <property name="dist.home"      value="${basedir}/dist"/>
+  <property name="src.home"       value="${basedir}/src"/>
+  <property name="javadoc.home"   value="${basedir}/doc/apidoc"/>
+  <property name="classes.home"   value="${basedir}/classes"/>
+  <property name="archive.home"   value="${dist.home}"/>
+  <property name="archive.name"   value="baysick.jar"/>
+
+  <description>
+    Ant build script for compiling Jaka.
+  </description>
+
+  <!-- Path pointing to the base of the src and deploy directory -->
+  <path id="src.classpath">
+    <pathelement location="${src.home}"/>
+    <pathelement location="${classes.home}"/>
+  </path>
+
+  <path id="scala.classpath">
+    <fileset dir="${env.SCALA_HOME}/lib" includes="**/*.jar"/>
+  </path>
+
+  <!-- Amalgamation of the above paths -->
+  <path id="project.classpath">
+    <path refid="scala.classpath" />
+    <path refid="src.classpath" />
+  </path>
+
+  <target name="clean">
+    <echo> Cleaning ${dist.home} </echo>
+    <echo> Cleaning ${archive.name} </echo>
+    <echo> Cleaning ${javadoc.home} </echo>
+    <echo> ${env.SCALA_HOME} </echo>
+
+    <delete includeemptydirs="true" failonerror="false">
+      <fileset dir="${dist.home}">
+        <include name="**/*"/>
+      </fileset>
+
+      <fileset dir="${classes.home}">
+        <include name="**/*"/>
+      </fileset>
+
+      <fileset dir="${archive.home}">
+        <include name="${archive.name}"/>
+      </fileset>
+
+      <fileset dir="${javadoc.home}">
+        <include name="**/*"/>
+      </fileset>
+    </delete>
+  </target>
+
+  <target name="prepare" depends="clean">
+    <mkdir dir="${classes.home}"/>
+    <mkdir dir="${dist.home}"/>
+  </target>
+
+  <target name="dist" depends="jar">
+    <mkdir dir="${dist.home}"/>
+
+    <copy todir="${dist.home}" includeEmptyDirs="false" preservelastmodified="yes" overwrite="yes" flatten="false">
+      <fileset dir="${src.home}" includes="jaka"/>
+    </copy>
+
+    <chmod file="${dist.home}/jaka" perm="ugo+rx"/>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar destfile="${archive.home}/${archive.name}" basedir="${classes.home}">
+      <manifest>
+        <attribute name="Author" value="Fogus"/>
+        <attribute name="Main-Class" value="fogus.jaka.Jaka"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="compile-scala" depends="">
+    <taskdef resource="scala/tools/ant/antlib.xml">
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+    </taskdef>
+
+    <scalac srcdir="src/fogus"
+            destdir="${classes.home}"
+            target="jvm-1.5"
+            force="changed"
+            deprecation="on">
+
+      <include name="**/*.scala"/>
+
+      <classpath>
+        <path refid="project.classpath" />
+      </classpath>
+    </scalac>
+  </target>
+
+  <target name="compile" depends="prepare,compile-scala">
+  </target>
+
+  <target name="apidoc" description="Create API docs for this project">
+    <mkdir dir="${javadoc.home}"/>
+
+    <scaladoc
+        destdir="${javadoc.home}">
+      <fileset dir="${basedir}/src" includes="**/*.scala" />
+    </scaladoc>
+  </target>
+
+</project>
