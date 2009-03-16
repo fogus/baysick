@@ -52,9 +52,8 @@ object HelloName extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "What is your name: "
     20 INPUT 'a
-    30 PRINT ("Hello ", 'a)
-    40 PRINT "Hello2 " % 'a
-    50 END
+    30 PRINT "Hello2 " % 'a
+    40 END
 
     RUN
   }

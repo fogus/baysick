@@ -6,7 +6,6 @@ package fogus.baysick {
     case class PrintString(num: Int, s: String) extends BasicLine
     case class PrintResult(num:Int, fn:Function0[String]) extends BasicLine
     case class PrintVariable(num: Int, s: Symbol) extends BasicLine
-    case class PrintLine(num: Int, str: String, name: Symbol) extends BasicLine
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
     case class InputLine(num: Int, name: Symbol) extends BasicLine
@@ -34,7 +33,6 @@ package fogus.baysick {
         def apply(str:String) = lines(num) = PrintString(num, str)
         def apply(number: BigInt) = lines(num) = PrintNumber(num, number)
         def apply(s: Symbol) = lines(num) = PrintVariable(num, s)
-        def apply(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
         def apply(fn:Function0[String]) = lines(num) = PrintResult(num, fn)
       }
 
@@ -49,11 +47,6 @@ package fogus.baysick {
 
     private def gotoLine(line: Int) {
       lines(line) match {
-        case PrintLine(_, str: String, name: Symbol) => {
-          val value = binds(name)
-          println(str + value)
-          gotoLine(line + 10)
-        }
         case PrintNumber(_, number:BigInt) => {
           println(number)
           gotoLine(line + 10)
