@@ -33,6 +33,7 @@ object HelloWorld extends Baysick {
 object HelloName extends Baysick {
   def main(args:Array[String]) = {
     10 INPUT ("What is your name: ", 'n)
+    20 END
 
     RUN
   }
