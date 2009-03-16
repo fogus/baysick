@@ -22,6 +22,12 @@ package fogus.baysick {
       def PRINT(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
       def INPUT(name: Symbol) = lines(num) = InputLine(num, name)
       def END() = lines(num) = EndLine(num)
+
+      object PRINTR {
+        def apply(str:String) {
+          lines(num) = PrintString(num, str)
+        }
+      }
     }
 
     private def gotoLine(line: Int) {
