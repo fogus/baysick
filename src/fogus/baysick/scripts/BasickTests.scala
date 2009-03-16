@@ -53,7 +53,8 @@ object HelloName extends Baysick {
     10 PRINT "What is your name: "
     20 INPUT 'a
     30 PRINT ("Hello ", 'a)
-    40 END
+    40 PRINT "Hello2 " % 'a
+    50 END
 
     RUN
   }

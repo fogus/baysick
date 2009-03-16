@@ -14,7 +14,17 @@ package fogus.baysick {
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
 
-    case class linebuilder(num: Int) {
+    case class Appendr(str: String) {
+      var append = str
+
+      def %(name:Symbol):Appendr = {
+        val value = binds(name)
+        append = append.concat(str.toString)
+        return this
+      }
+    }
+
+    case class LineBuilder(num: Int) {
       def END() = lines(num) = EndLine(num)
 
       object PRINT {
@@ -22,6 +32,7 @@ package fogus.baysick {
         def apply(number: BigInt) = lines(num) = PrintNumber(num, number)
         def apply(s: Symbol) = lines(num) = PrintVariable(num, s)
         def apply(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
+        def apply(a:Appendr) = lines(num) = PrintString(num, a.append)
       }
 
       object INPUT {
@@ -69,6 +80,7 @@ package fogus.baysick {
       gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
     }
 
-    implicit def int2linebuilder(i: Int) = linebuilder(i)
+    implicit def int2LineBuilder(i: Int) = LineBuilder(i)
+    implicit def string2Appendr(s:String) = Appendr(s)
   }
 }
