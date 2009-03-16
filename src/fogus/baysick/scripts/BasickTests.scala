@@ -38,7 +38,7 @@ object HelloNumbers extends Baysick {
     40 PRINT "... and some math"
     50 PRINT "2 + 2"
     60 PRINT 2 + 2
-    70 PRINT "102845646545646546L * 2"
+    70 PRINT "102845646545646546 * 2"
     80 PRINT 102845646545646546L * 2
     90 PRINT "5 - 100"
     100 PRINT 5 - 100
