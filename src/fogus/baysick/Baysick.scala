@@ -3,7 +3,7 @@ package fogus.baysick {
 
   class Baysick {
     abstract sealed class BasicLine
-    case class PrintLine(num: Int, s: String) extends BasicLine
+    case class PrintLine(num: Int, s: Any) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
     case class InputLine(num: Int, name: Symbol) extends BasicLine
     case class EndLine(num: Int) extends BasicLine
@@ -20,7 +20,7 @@ package fogus.baysick {
 
     private def gotoLine(line: Int) {
       lines(line) match {
-        case PrintLine(_, s) => {
+        case PrintLine(_, s:String) => {
           println(s)
           gotoLine(line + 10)
         }
