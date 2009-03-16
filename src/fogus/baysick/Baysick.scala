@@ -15,17 +15,21 @@ package fogus.baysick {
     val binds = new HashMap[Symbol, Any]
 
     case class linebuilder(num: Int) {
-      def GOTO(to: Int) = lines(num) = GotoLine(num, to)
-      def PRINT(number: BigInt) = lines(num) = PrintNumber(num, number)
-      def PRINT(s: Symbol) = lines(num) = PrintVariable(num, s)
-      def PRINT(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
-      def INPUT(name: Symbol) = lines(num) = InputLine(num, name)
       def END() = lines(num) = EndLine(num)
 
       object PRINT {
-        def apply(str:String) {
-          lines(num) = PrintString(num, str)
-        }
+        def apply(str:String) = lines(num) = PrintString(num, str)
+        def apply(number: BigInt) = lines(num) = PrintNumber(num, number)
+        def apply(s: Symbol) = lines(num) = PrintVariable(num, s)
+        def apply(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
+      }
+
+      object INPUT {
+        def apply(name: Symbol) = lines(num) = InputLine(num, name)
+      }
+
+      object GOTO {
+        def apply(to: Int) = lines(num) = GotoLine(num, to)
       }
     }
 
