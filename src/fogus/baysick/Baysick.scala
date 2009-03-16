@@ -31,14 +31,13 @@ package fogus.baysick {
         }
         case GotoLine(_, to) => gotoLine(to)
         case EndLine(_) => {
-          println("Done.")
-          System.exit(0)
+          println("-- Done at line " + line)
         }
       }
     }
 
     def RUN {
-      gotoLine(lines.keys.toList.first)
+      gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
     }
 
     implicit def int2linebuilder(i: Int) = linebuilder(i)
