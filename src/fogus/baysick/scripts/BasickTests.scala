@@ -24,8 +24,7 @@ object EndlessLoop extends Baysick {
 object HelloWorld extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "Hello Cleveland!"
-    20 PRINTR "Foo"
-    30 END
+    20 END
 
     RUN
   }
