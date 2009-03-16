@@ -17,7 +17,7 @@ package fogus.baysick {
     case class linebuilder(num: Int) {
       def GOTO(to: Int) = lines(num) = GotoLine(num, to)
       def PRINT(s: String) = lines(num) = PrintString(num, s)
-      def PRINT(number: Int) = lines(num) = PrintNumber(num, number)
+      def PRINT(number: BigInt) = lines(num) = PrintNumber(num, number)
       def PRINT(s: Symbol) = lines(num) = PrintVariable(num, s)
       def PRINT(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
       def INPUT(name: Symbol) = lines(num) = InputLine(num, name)
@@ -30,7 +30,7 @@ package fogus.baysick {
           val value = binds(name)
           println(str + value)
         }
-        case PrintNumber(_, number:Int) => {
+        case PrintNumber(_, number:BigInt) => {
           println(number)
           gotoLine(line + 10)
         }
