@@ -6,7 +6,7 @@ package fogus.baysick {
     case class PrintString(num: Int, s: String) extends BasicLine
     case class PrintVariable(num: Int, s: Symbol) extends BasicLine
     case class PrintLine(num: Int, str: String, name: Symbol) extends BasicLine
-    case class PrintNumber(num: Int, number: Int) extends BasicLine
+    case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
     case class InputLine(num: Int, name: Symbol) extends BasicLine
     case class EndLine(num: Int) extends BasicLine
