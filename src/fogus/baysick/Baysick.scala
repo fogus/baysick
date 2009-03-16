@@ -4,6 +4,7 @@ package fogus.baysick {
   class Baysick {
     abstract sealed class BasicLine
     case class PrintString(num: Int, s: String) extends BasicLine
+    case class PrintResult(num:Int, fn:Function0[String]) extends BasicLine
     case class PrintVariable(num: Int, s: Symbol) extends BasicLine
     case class PrintLine(num: Int, str: String, name: Symbol) extends BasicLine
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
@@ -17,10 +18,12 @@ package fogus.baysick {
     case class Appendr(str: String) {
       var append = str
 
-      def %(name:Symbol):Appendr = {
-        val value = binds(name)
-        append = append.concat(str.toString)
-        return this
+      def %(name:Symbol):Function0[String] = {
+        return new Function0[String] {
+          def apply():String = {
+            return str.concat(binds(name).toString)
+          }
+        }
       }
     }
 
@@ -32,7 +35,7 @@ package fogus.baysick {
         def apply(number: BigInt) = lines(num) = PrintNumber(num, number)
         def apply(s: Symbol) = lines(num) = PrintVariable(num, s)
         def apply(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
-        def apply(a:Appendr) = lines(num) = PrintString(num, a.append)
+        def apply(fn:Function0[String]) = lines(num) = PrintResult(num, fn)
       }
 
       object INPUT {
@@ -57,6 +60,10 @@ package fogus.baysick {
         }
         case PrintString(_, s:String) => {
           println(s)
+          gotoLine(line + 10)
+        }
+        case PrintResult(_, fn:Function0[String]) => {
+          println(fn())
           gotoLine(line + 10)
         }
         case PrintVariable(_, s:Symbol) => {
