@@ -32,7 +32,6 @@ package fogus.baysick {
         case InputLine(_, name) => {
           val entry = readLine
           binds(name) = entry
-          println(binds)
           gotoLine(line + 10)
         }
         case GotoLine(_, to) => gotoLine(to)
