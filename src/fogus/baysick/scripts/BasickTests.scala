@@ -30,6 +30,24 @@ object HelloWorld extends Baysick {
   }
 }
 
+object HelloNumbers extends Baysick {
+  def main(args:Array[String]) = {
+    10 PRINT "Here are some numbers:"
+    20 PRINT 42
+    30 PRINT 102827763
+    40 PRINT "... and some math"
+    50 PRINT "2 + 2"
+    60 PRINT 2 + 2
+    70 PRINT "3/2"
+    80 PRINT 3/2
+    90 PRINT "5 - 100"
+    100 PRINT 5 - 100
+    110 END
+
+    RUN
+  }
+}
+
 object HelloName extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "What is your name: "
