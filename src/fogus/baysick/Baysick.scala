@@ -3,7 +3,8 @@ package fogus.baysick {
 
   class Baysick {
     abstract sealed class BasicLine
-    case class PrintLine(num: Int, s: Any) extends BasicLine
+    case class PrintString(num: Int, s: String) extends BasicLine
+    case class PrintVariable(num: Int, s: Symbol) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
     case class InputLine(num: Int, name: Symbol) extends BasicLine
     case class EndLine(num: Int) extends BasicLine
@@ -13,18 +14,19 @@ package fogus.baysick {
 
     case class linebuilder(num: Int) {
       def GOTO(to: Int) = lines(num) = GotoLine(num, to)
-      def PRINT(s: Any) = lines(num) = PrintLine(num, s)
+      def PRINT(s: String) = lines(num) = PrintString(num, s)
+      def PRINT(s: Symbol) = lines(num) = PrintVariable(num, s)
       def INPUT(name: Symbol) = lines(num) = InputLine(num, name)
       def END() = lines(num) = EndLine(num)
     }
 
     private def gotoLine(line: Int) {
       lines(line) match {
-        case PrintLine(_, s:String) => {
+        case PrintString(_, s:String) => {
           println(s)
           gotoLine(line + 10)
         }
-        case PrintLine(_, s:Symbol) => {
+        case PrintVariable(_, s:Symbol) => {
           val value = binds(s)
           println(value)
           gotoLine(line + 10)
