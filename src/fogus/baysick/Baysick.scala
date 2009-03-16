@@ -7,31 +7,9 @@ package fogus.baysick {
     case class PrintVariable(num: Int, s: Symbol) extends BasicLine
     case class PrintLine(num: Int, str: String, name: Symbol) extends BasicLine
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
-    case class PrintAll(num: Int, g:Getr) extends BasicLine
     case class GotoLine(num: Int, to: Int) extends BasicLine
     case class InputLine(num: Int, name: Symbol) extends BasicLine
     case class EndLine(num: Int) extends BasicLine
-
-    class Getr(prefix:Function1[Symbol, Unit]) {
-      val pre = prefix
-
-      def %(name:Symbol) {
-        pre(name)
-
-        return this
-      }
-    }
-
-    object PRINTR {
-      def apply(str:String):Getr = {
-        return new Getr(new Function1[Symbol, Unit] {
-                              def apply(name:Symbol) = {
-                                val value = binds(name)
-                                println(str + value)
-                              }
-                            })
-      }
-    }
 
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
@@ -42,17 +20,12 @@ package fogus.baysick {
       def PRINT(number: BigInt) = lines(num) = PrintNumber(num, number)
       def PRINT(s: Symbol) = lines(num) = PrintVariable(num, s)
       def PRINT(str: String, name: Symbol) = lines(num) = PrintLine(num, str, name)
-      def PRINT(g:Getr) = lines(num) = PrintAll(num, g)
       def INPUT(name: Symbol) = lines(num) = InputLine(num, name)
       def END() = lines(num) = EndLine(num)
     }
 
     private def gotoLine(line: Int) {
       lines(line) match {
-        case PrintAll(_, g:Getr) => {
-          println(g)
-          gotoLine(line + 10)
-        }
         case PrintLine(_, str: String, name: Symbol) => {
           val value = binds(name)
           println(str + value)
