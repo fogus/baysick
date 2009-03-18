@@ -25,6 +25,8 @@ package fogus.baysick {
       }
     }
 
+    def stringify(x:Any*):String = x.mkString("")
+
     case class Appendr(lhs:Any) {
       /**
        * <code>appendage</code> refers to the LHS value to be appended, <b>at
@@ -37,8 +39,6 @@ package fogus.baysick {
         case fn:Function0[String] => fn
         case _ => (() => lhs.toString)
       }
-
-      def stringify(x:Any*):String = x.mkString("")
 
       def %(rhs:Any):Function0[String] = {
         return new Function0[String] {
@@ -55,10 +55,8 @@ package fogus.baysick {
       }
     }
 
-    def SQRT(n:Any):Function0[String] = n match {
-      case i:Int => (() => Math.sqrt(i).toString)
-      case s:Symbol => (() => (Math.sqrt(binds(s).asInstanceOf[BigInt].intValue)).toString)
-    }
+    def SQRT(i:BigInt):Function0[String] = (() => Math.sqrt(i.intValue).toString)
+    def SQRT(s:Symbol):Function0[String] = (() => stringify(Math.sqrt(binds(s).asInstanceOf[BigInt].intValue)))
 
     case class LineBuilder(num: Int) {
       def END() = lines(num) = End(num)
@@ -103,8 +101,16 @@ package fogus.baysick {
           gotoLine(line + 10)
         }
         case Input(_, name) => {
-          val entry = readLine
-          binds(name) = entry
+          var entry = readLine
+
+          // Temporary hack
+          try {
+            binds(name) = BigInt(entry)
+          }
+          catch {
+            case _ => binds(name) = entry
+          }
+
           gotoLine(line + 10)
         }
         case Let(_, fn:Function0[Unit]) => {
