@@ -9,6 +9,7 @@ package fogus.baysick {
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class Goto(num: Int, to: Int) extends BasicLine
     case class Input(num: Int, name: Symbol) extends BasicLine
+    case class Let(num:Int, action:Assignr) extends BasicLine
     case class End(num: Int) extends BasicLine
 
     val lines = new HashMap[Int, BasicLine]
