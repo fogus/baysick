@@ -26,16 +26,26 @@ package fogus.baysick {
     }
 
     case class Appendr(lhs:Any) {
+      /**
+       * <code>appendage</code> refers to the LHS value to be appended, <b>at
+       * runtime</b>.  This is done, by setting it to a function which performs
+       * lookups (for symbols) and toString conversion.
+       *
+       */
       var appendage = lhs match {
         case sym:Symbol => (() => binds(sym).toString)
         case _ => (() => lhs.toString)
       }
 
-      def %(key:Any):Function0[String] = {
+      def %(rhs:Any):Function0[String] = {
         return new Function0[String] {
-          def apply():String = key match {
+          /**
+           * Check the type of the RHS.  For symbols, do a lookup, then
+           * concatenate it to the result of the appendage function.
+           */
+          def apply():String = rhs match {
             case sym:Symbol => appendage().concat(binds(sym).toString)
-            case _ => appendage().concat(key.toString)
+            case _ => appendage().concat(rhs.toString)
           }
         }
       }
