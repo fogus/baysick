@@ -65,7 +65,9 @@ object HelloLet extends Baysick {
   def main(args:Array[String]) = {
     10 LET ('a := "Hello Let!")
     20 PRINT 'a
-    30 END
+    30 LET ('a := 42)
+    40 PRINT 'a
+    50 END
 
     RUN
   }
