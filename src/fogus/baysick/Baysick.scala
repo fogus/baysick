@@ -9,7 +9,7 @@ package fogus.baysick {
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class Goto(num: Int, to: Int) extends BasicLine
     case class Input(num: Int, name: Symbol) extends BasicLine
-    case class EndLine(num: Int) extends BasicLine
+    case class End(num: Int) extends BasicLine
 
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
@@ -27,7 +27,7 @@ package fogus.baysick {
     }
 
     case class LineBuilder(num: Int) {
-      def END() = lines(num) = EndLine(num)
+      def END() = lines(num) = End(num)
 
       object PRINT {
         def apply(str:String) = lines(num) = PrintString(num, str)
@@ -70,7 +70,7 @@ package fogus.baysick {
           gotoLine(line + 10)
         }
         case Goto(_, to) => gotoLine(to)
-        case EndLine(_) => {
+        case End(_) => {
           println("-- Done at line " + line)
         }
       }
