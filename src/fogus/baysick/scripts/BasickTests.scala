@@ -63,7 +63,7 @@ object HelloName extends Baysick {
 
 object HelloLet extends Baysick {
   def main(args:Array[String]) = {
-    10 LET 'a := 2
+    10 LET 'a := "Hello Let!"
     20 PRINT 'a
     30 END
 

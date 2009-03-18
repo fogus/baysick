@@ -16,18 +16,16 @@ package fogus.baysick {
     val binds = new HashMap[Symbol, Any]
 
     case class Assignr(name:Symbol) {
-      def :=(num:BigInt):Function0[Unit] = {
+      def :=(str:Any):Function0[Unit] = {
         return new Function0[Unit] {
           def apply() = {
-            binds(name) = num
+            binds(name) = str
           }
         }
       }
     }
 
     case class Appendr(str: String) {
-      var append = str
-
       def %(name:Symbol):Function0[String] = {
         return new Function0[String] {
           def apply():String = {
@@ -101,6 +99,6 @@ package fogus.baysick {
 
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def string2Appendr(s:String) = Appendr(s)
-    implicit def symbol2Assignr(s:Symbol) = Assignr(s)
+    implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
   }
 }
