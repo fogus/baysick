@@ -119,7 +119,7 @@ package fogus.baysick {
         }
         case Goto(_, to) => gotoLine(to)
         case End(_) => {
-          println("-- Done at line " + line)
+          println("BREAK IN LINE" + line)
         }
       }
     }
