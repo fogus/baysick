@@ -61,6 +61,17 @@ object HelloName extends Baysick {
   }
 }
 
+object HelloPrint extends Baysick {
+  def main(args:Array[String]) = {
+    10 LET ('a := "World")
+    20 PRINT "Hello " % 'a
+    30 PRINT 'a % " World"
+    40 END
+
+    RUN
+  }
+}
+
 object HelloLet extends Baysick {
   def main(args:Array[String]) = {
     10 LET ('a := "Hello Let!")
