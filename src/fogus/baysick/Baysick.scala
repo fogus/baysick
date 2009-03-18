@@ -34,6 +34,7 @@ package fogus.baysick {
        */
       var appendage = lhs match {
         case sym:Symbol => (() => binds(sym).toString)
+        case fn:Function0[String] => fn
         case _ => (() => lhs.toString)
       }
 
@@ -45,6 +46,7 @@ package fogus.baysick {
            */
           def apply():String = rhs match {
             case sym:Symbol => appendage().concat(binds(sym).toString)
+            case fn:Function0[String] => appendage().concat(fn())
             case _ => appendage().concat(rhs.toString)
           }
         }
@@ -116,5 +118,6 @@ package fogus.baysick {
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
+    implicit def symbol2Int(sym:Symbol) = binds(sym).asInstanceOf[Int]
   }
 }

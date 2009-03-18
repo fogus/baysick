@@ -96,7 +96,7 @@ object SquareRoot extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "Enter a number"
     20 INPUT 'n
-    30 PRINT "Square root of " % 'n % " is " % Math.sqrt('n)
+    30 PRINT "Square root of " % "'n is " % 'n
     40 END
 
     RUN
