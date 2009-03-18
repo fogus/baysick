@@ -14,6 +14,10 @@ package fogus.baysick {
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
 
+    case class Assignr(name:Symbol) {
+      def :=(num:BigInt) = binds(name) = num
+    }
+
     case class Appendr(str: String) {
       var append = str
 
