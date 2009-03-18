@@ -9,14 +9,20 @@ package fogus.baysick {
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class Goto(num: Int, to: Int) extends BasicLine
     case class Input(num: Int, name: Symbol) extends BasicLine
-    case class Let(num:Int, action:Assignr) extends BasicLine
+    case class Let(num:Int, fn:Function0[Unit]) extends BasicLine
     case class End(num: Int) extends BasicLine
 
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
 
     case class Assignr(name:Symbol) {
-      def :=(num:BigInt) = binds(name) = num
+      def :=(num:BigInt):Function0[Unit] = {
+        return new Function0[Unit] {
+          def apply() = {
+            binds(name) = num
+          }
+        }
+      }
     }
 
     case class Appendr(str: String) {
@@ -43,6 +49,10 @@ package fogus.baysick {
 
       object INPUT {
         def apply(name: Symbol) = lines(num) = Input(num, name)
+      }
+
+      object LET {
+        def apply(fn:Function0[Unit]) = lines(num) = Let(num, fn)
       }
 
       object GOTO {
@@ -74,6 +84,10 @@ package fogus.baysick {
           binds(name) = entry
           gotoLine(line + 10)
         }
+        case Let(_, fn:Function0[Unit]) => {
+          fn()
+          gotoLine(line + 10)
+        }
         case Goto(_, to) => gotoLine(to)
         case End(_) => {
           println("-- Done at line " + line)
@@ -87,5 +101,6 @@ package fogus.baysick {
 
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def string2Appendr(s:String) = Appendr(s)
+    implicit def symbol2Assignr(s:Symbol) = Assignr(s)
   }
 }

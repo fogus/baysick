@@ -60,3 +60,13 @@ object HelloName extends Baysick {
     RUN
   }
 }
+
+object HelloLet extends Baysick {
+  def main(args:Array[String]) = {
+    10 LET 'a := 2
+    20 PRINT 'a
+    30 END
+
+    RUN
+  }
+}
