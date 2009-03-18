@@ -66,7 +66,15 @@ object HelloPrint extends Baysick {
     10 LET ('a := "World")
     20 PRINT "Hello " % 'a
     30 PRINT 'a % " World"
-    40 END
+    40 LET ('a := 42)
+    50 PRINT "Hello " % 42
+    60 PRINT "Hello " % 'a
+    70 PRINT 42 % " World"
+    80 PRINT 'a % " World"
+    90 PRINT 'a % 'a
+    100 PRINT 42 % 42  // doesn't work!  :(  calls modulo
+    110 PRINT "Hello " % "World"
+    120 END
 
     RUN
   }
