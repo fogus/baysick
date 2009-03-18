@@ -38,6 +38,8 @@ package fogus.baysick {
         case _ => (() => lhs.toString)
       }
 
+      def stringify(x:Any*):String = x.mkString("")
+
       def %(rhs:Any):Function0[String] = {
         return new Function0[String] {
           /**
@@ -45,12 +47,17 @@ package fogus.baysick {
            * concatenate it to the result of the appendage function.
            */
           def apply():String = rhs match {
-            case sym:Symbol => appendage().concat(binds(sym).toString)
-            case fn:Function0[String] => appendage().concat(fn())
-            case _ => appendage().concat(rhs.toString)
+            case sym:Symbol => stringify(appendage(), binds(sym))
+            case fn:Function0[String] => stringify(appendage(), fn())
+            case _ => stringify(appendage(), rhs)
           }
         }
       }
+    }
+
+    def SQRT(n:Any):Function0[String] = n match {
+      case i:Int => (() => Math.sqrt(i).toString)
+      case s:Symbol => (() => (Math.sqrt(binds(s).asInstanceOf[BigInt].intValue)).toString)
     }
 
     case class LineBuilder(num: Int) {

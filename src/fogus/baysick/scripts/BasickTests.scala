@@ -82,7 +82,7 @@ object HelloPrint extends Baysick {
 
 object HelloLet extends Baysick {
   def main(args:Array[String]) = {
-    10 LET ('a := "Hello Let!")
+    10 LET ('a := "Hello Let!")  // weird, LET requires parens
     20 PRINT 'a
     30 LET ('a := 42)
     40 PRINT 'a
@@ -96,7 +96,7 @@ object SquareRoot extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "Enter a number"
     20 INPUT 'n
-    30 PRINT "Square root of " % "'n is " % 'n
+    30 PRINT "Square root of " % "'n is " % SQRT('n)
     40 END
 
     RUN
