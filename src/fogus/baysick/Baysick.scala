@@ -16,7 +16,7 @@ package fogus.baysick {
     val binds = new HashMap[Symbol, Any]
 
     case class Assignr(sym:Symbol) {
-      def :=(value:String):Function0[Unit] = {
+      def :=(value:Any):Function0[Unit] = {
         return new Function0[Unit] {
           def apply() = {
             binds(sym) = value
