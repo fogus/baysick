@@ -91,3 +91,14 @@ object HelloLet extends Baysick {
     RUN
   }
 }
+
+object SquareRoot extends Baysick {
+  def main(args:Array[String]) = {
+    10 PRINT "Enter a number"
+    20 INPUT 'n
+    30 PRINT "You typed " % 'n
+    40 END
+
+    RUN
+  }
+}
