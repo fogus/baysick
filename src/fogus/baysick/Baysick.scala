@@ -26,10 +26,14 @@ package fogus.baysick {
     }
 
     case class Appendr(str: String) {
-      def %(name:Symbol):Function0[String] = {
+      var appendage = str
+
+      def this(key:Symbol) = this(binds(key).toString)
+
+      def %(key:Symbol):Function0[String] = {
         return new Function0[String] {
           def apply():String = {
-            str.concat(binds(name).toString)
+            appendage.concat(binds(key).toString)
           }
         }
       }
