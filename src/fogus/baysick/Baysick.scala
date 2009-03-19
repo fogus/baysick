@@ -131,6 +131,5 @@ package fogus.baysick {
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
-    implicit def symbol2Int(sym:Symbol) = binds(sym).asInstanceOf[Int]
   }
 }
