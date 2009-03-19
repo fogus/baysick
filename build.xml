@@ -59,6 +59,12 @@
   <target name="prepare" depends="clean">
     <mkdir dir="${classes.home}"/>
     <mkdir dir="${dist.home}"/>
+
+    <copy todir="${dist.home}" includeEmptyDirs="false" preservelastmodified="yes" overwrite="yes" flatten="false">
+      <fileset dir="${src.home}" includes="test_all.sh"/>
+    </copy>
+
+    <chmod file="${dist.home}/test_all.sh" perm="ugo+rx"/>
   </target>
 
   <target name="dist" depends="jar">
