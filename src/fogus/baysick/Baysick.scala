@@ -62,6 +62,8 @@ package fogus.baysick {
     def SQRT(i:BigInt):Function0[BigInt] = (() => Math.sqrt(i.intValue))
     def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds(s).asInstanceOf[BigInt].intValue))
 
+    def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
+
     case class LineBuilder(num: Int) {
       def END() = lines(num) = End(num)
 
@@ -138,10 +140,6 @@ package fogus.baysick {
           println("BREAK IN LINE " + line)
         }
       }
-    }
-
-    def RUN {
-      gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
     }
 
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
