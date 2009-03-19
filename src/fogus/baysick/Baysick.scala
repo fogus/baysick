@@ -36,7 +36,7 @@ package fogus.baysick {
        */
       var appendage = lhs match {
         case sym:Symbol => (() => binds(sym).toString)
-        case fn:Function0[String] => fn
+        case fn:Function0[Any] => fn
         case _ => (() => lhs.toString)
       }
 
@@ -48,15 +48,15 @@ package fogus.baysick {
            */
           def apply():String = rhs match {
             case sym:Symbol => stringify(appendage(), binds(sym))
-            case fn:Function0[String] => stringify(appendage(), fn())
+            case fn:Function0[Any] => stringify(appendage(), fn())
             case _ => stringify(appendage(), rhs)
           }
         }
       }
     }
 
-    def SQRT(i:BigInt):Function0[String] = (() => Math.sqrt(i.intValue).toString)
-    def SQRT(s:Symbol):Function0[String] = (() => stringify(Math.sqrt(binds(s).asInstanceOf[BigInt].intValue)))
+    def SQRT(i:BigInt):Function0[BigInt] = (() => Math.sqrt(i.intValue))
+    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds(s).asInstanceOf[BigInt].intValue))
 
     case class LineBuilder(num: Int) {
       def END() = lines(num) = End(num)
@@ -119,7 +119,7 @@ package fogus.baysick {
         }
         case Goto(_, to) => gotoLine(to)
         case End(_) => {
-          println("BREAK IN LINE" + line)
+          println("BREAK IN LINE " + line)
         }
       }
     }
