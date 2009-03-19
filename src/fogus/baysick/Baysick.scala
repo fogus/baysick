@@ -25,6 +25,24 @@ package fogus.baysick {
       }
     }
 
+    def get(name:Symbol):Any = binds(name)
+    def set(name:Symbol, value:Any) = binds(name) = value
+
+    case class Comparer(sym:Symbol) {
+      def ==(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs)
+    }
+
+    case class Jumpr(fn:Function0[Boolean]) {
+      def THEN(loc:Int):Any = {
+        if (fn()) {
+          Goto(_:Int, loc)
+        }
+        else {
+          Goto(_:Int, _:Int)
+        }
+      }
+    }
+
     def stringify(x:Any*):String = x.mkString("")
 
     case class Appendr(lhs:Any) {
@@ -131,5 +149,6 @@ package fogus.baysick {
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
+    implicit def boolFn2Jumpr(fn:Function0[Boolean]) = Jumpr(fn)
   }
 }
