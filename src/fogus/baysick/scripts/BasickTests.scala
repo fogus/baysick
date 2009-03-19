@@ -98,7 +98,10 @@ object HelloIf extends Baysick {
     20 IF 'a === 5 THEN 40
     30 PRINT "This will never execute"
     40 PRINT "They were equal!"
-    50 END
+    50 IF 'a === 6 THEN 70
+    60 PRINT "This will execute 1st..."
+    70 PRINT "...then this!"
+    80 END
 
     RUN
   }

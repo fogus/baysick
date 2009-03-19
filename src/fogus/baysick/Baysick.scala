@@ -17,13 +17,7 @@ package fogus.baysick {
     val binds = new HashMap[Symbol, Any]
 
     case class Assignr(sym:Symbol) {
-      def :=(value:Any):Function0[Unit] = {
-        return new Function0[Unit] {
-          def apply() = {
-            binds(sym) = value
-          }
-        }
-      }
+      def :=(value:Any):Function0[Unit] = (() => binds(sym) = value)
     }
 
     def get(name:Symbol):Any = binds(name)
@@ -95,9 +89,7 @@ package fogus.baysick {
       }
 
       object IF {
-        def apply(fn:Function0[Boolean]) = {
-          Jumpr(num, fn)
-        }
+        def apply(fn:Function0[Boolean]) = Jumpr(num, fn)
       }
     }
 
