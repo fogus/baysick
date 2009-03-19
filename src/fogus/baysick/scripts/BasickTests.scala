@@ -92,6 +92,18 @@ object HelloLet extends Baysick {
   }
 }
 
+object HelloIf extends Baysick {
+  def main(args:Array[String]) = {
+    10 LET ('a := 5)
+    20 IF 'a === 5 THEN 40
+    30 PRINT "This will never execute"
+    40 PRINT "They were equal!"
+    50 END
+
+    RUN
+  }
+}
+
 object SquareRoot extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "Enter a number"
