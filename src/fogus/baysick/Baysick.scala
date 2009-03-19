@@ -47,17 +47,15 @@ package fogus.baysick {
       }
 
       def %(rhs:Any):Function0[String] = {
-        return new Function0[String] {
-          /**
-           * Check the type of the RHS.  For symbols, do a lookup, then
-           * concatenate it to the result of the appendage function.
-           */
-          def apply():String = rhs match {
-            case sym:Symbol => stringify(appendage(), binds(sym))
-            case fn:Function0[Any] => stringify(appendage(), fn())
-            case _ => stringify(appendage(), rhs)
-          }
-        }
+        /**
+         * Check the type of the RHS.  For symbols, do a lookup, then
+         * concatenate it to the result of the appendage function.
+         */
+        (() => rhs match {
+          case sym:Symbol => stringify(appendage(), binds(sym))
+          case fn:Function0[Any] => stringify(appendage(), fn())
+          case _ => stringify(appendage(), rhs)
+        })
       }
     }
 
