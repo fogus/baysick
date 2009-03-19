@@ -33,12 +33,12 @@ package fogus.baysick {
     }
 
     case class Jumpr(fn:Function0[Boolean]) {
-      def THEN(loc:Int):Any = {
+      def THEN(loc:Int):Goto = {
         if (fn()) {
-          Goto(_:Int, loc)
+          Goto(-1, loc)
         }
         else {
-          Goto(_:Int, _:Int)
+          Goto(-1, -1)
         }
       }
     }
@@ -96,6 +96,13 @@ package fogus.baysick {
 
       object GOTO {
         def apply(to: Int) = lines(num) = Goto(num, to)
+      }
+
+      object IF {
+        def apply(goto:Goto) = goto match {
+          case Goto(-1, -1) => lines(num) = Goto(num, num + 10)
+          case Goto(-1, x:Int) => lines(num) = Goto(num, x)
+        }
       }
     }
 
