@@ -132,8 +132,9 @@ object Lunar extends Baysick {
     90 PRINT "To accelerate enter a positive number, to decelerate a negative"
 
     100 PRINT "Distance " % 'dist % "km, " % "Velocity " % 'v % "km/s, " % "Fuel " % 'fuel
+    110 INPUT 'burn
 
-    110 END
+    120 END
 
     RUN
   }
