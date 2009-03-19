@@ -16,21 +16,19 @@ package fogus.baysick {
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
 
+    def get(name:Symbol):Any = binds(name)
+    def set(name:Symbol, value:Any) = binds(name) = value
+
     case class Assignr(sym:Symbol) {
       def :=(value:Any):Function0[Unit] = (() => binds(sym) = value)
     }
-
-    def get(name:Symbol):Any = binds(name)
-    def set(name:Symbol, value:Any) = binds(name) = value
 
     case class Comparer(sym:Symbol) {
       def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs)
     }
 
     case class Jumpr(num:Int, fn:Function0[Boolean]) {
-      def THEN(loc:Int) = {
-        lines(num) = If(num, fn, loc)
-      }
+      def THEN(loc:Int) = lines(num) = If(num, fn, loc)
     }
 
     def stringify(x:Any*):String = x.mkString("")
