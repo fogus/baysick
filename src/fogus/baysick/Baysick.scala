@@ -10,6 +10,7 @@ package fogus.baysick {
     case class Goto(num: Int, to: Int) extends BasicLine
     case class Input(num: Int, name: Symbol) extends BasicLine
     case class Let(num:Int, fn:Function0[Unit]) extends BasicLine
+    case class If(num:Int, fn:Function0[Boolean], thenJmp:Int) extends BasicLine
     case class End(num: Int) extends BasicLine
 
     val lines = new HashMap[Int, BasicLine]
@@ -34,12 +35,7 @@ package fogus.baysick {
 
     case class Jumpr(num:Int, fn:Function0[Boolean]) {
       def THEN(loc:Int) = {
-        if (fn()) {
-          lines(num) = Goto(num, loc)
-        }
-        else {
-          lines(num) = Goto(num, num + 10)
-        }
+        lines(num) = If(num, fn, loc)
       }
     }
 
@@ -140,6 +136,14 @@ package fogus.baysick {
         case Let(_, fn:Function0[Unit]) => {
           fn()
           gotoLine(line + 10)
+        }
+        case If(_, fn:Function0[Boolean], thenJmp:Int) => {
+          if(fn()) {
+            gotoLine(thenJmp)
+          }
+          else {
+            gotoLine(line + 10)
+          }
         }
         case Goto(_, to) => gotoLine(to)
         case End(_) => {
