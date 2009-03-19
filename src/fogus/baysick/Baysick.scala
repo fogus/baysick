@@ -20,7 +20,7 @@ package fogus.baysick {
     def set(name:Symbol, value:Any) = binds(name) = value
 
     case class Assignr(sym:Symbol) {
-      def :=(value:Any):Function0[Unit] = (() => binds(sym) = value)
+      def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
     case class Comparer(sym:Symbol) {
