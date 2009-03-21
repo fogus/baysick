@@ -133,7 +133,23 @@ object Lunar extends Baysick {
 
     100 PRINT "Distance " % 'dist % "km, " % "Velocity " % 'v % "km/s, " % "Fuel " % 'fuel
     110 INPUT 'burn
+/*
+115 IF ABS(burn) <= fuel THEN 120
+116 PRINT "You don't have that much fuel"
+117 GOTO 100
+120 LET v = v + burn * 10 / (fuel + mass)
+130 LET fuel = fuel - ABS(burn)
+140 LET dist = dist - v
+150 IF dist > 0 THEN 100
+160 PRINT "You have hit the surface"
+170 IF v < 3 THEN 210
+180 PRINT "Hit surface too fast (", v,")km/s"
+190 PRINT "You Crash"
+200 GOTO 220
+210 PRINT "Well done"
+220 REM END
 
+*/
     120 END
 
     RUN
