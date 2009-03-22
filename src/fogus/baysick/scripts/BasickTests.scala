@@ -133,11 +133,11 @@ object Lunar extends Baysick {
 
     100 PRINT "Distance " % 'dist % "km, " % "Velocity " % 'v % "km/s, " % "Fuel " % 'fuel
     110 INPUT 'burn
+    120 IF ABS('burn) <= 'fuel THEN 150
+    130 PRINT "You don't have that much fuel"
+    140 GOTO 100
+    150 LET 'v = 'v + 'burn * 10 / ('fuel + 'mass)
 /*
-115 IF ABS(burn) <= fuel THEN 120
-116 PRINT "You don't have that much fuel"
-117 GOTO 100
-120 LET v = v + burn * 10 / (fuel + mass)
 130 LET fuel = fuel - ABS(burn)
 140 LET dist = dist - v
 150 IF dist > 0 THEN 100
