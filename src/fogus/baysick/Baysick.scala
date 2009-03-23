@@ -13,25 +13,36 @@ package fogus.baysick {
     case class If(num:Int, fn:Function0[Boolean], thenJmp:Int) extends BasicLine
     case class End(num: Int) extends BasicLine
 
-    class Bindings {
-      private val strings = new HashMap[Symbol, String]
-      private val numbers = new HashMap[Symbol, Int]
+    class Bindings[T,U] {
+      private val atoms = HashMap[Symbol, T]()
+      private val numerics = HashMap[Symbol, U]()
 
-      def set(k:Symbol, v:String) = strings(k) = v
-      def set(k:Symbol, v:Int) = numbers(k) = v
-      def str(k:Symbol):String = strings(k)
-      def num(k:Symbol):Int = numbers(k)
+      def set(k:Symbol, v:T) = atoms(k) = v
+      def set(k:Symbol, v:U) = numerics(k) = v
+      def atom(k:Symbol):T = atoms(k)
+      def num(k:Symbol):U = numerics(k)
+
+      def any(k:Symbol):Any = {
+        (atoms.get(k), numerics.get(k)) match {
+          case (Some(x), None) => x
+          case (None, Some(y)) => y
+          case (None, None) => None
+          case (Some(x), Some(y)) => x
+        }
+      }
     }
 
     val lines = new HashMap[Int, BasicLine]
-    val binds = new Bindings()
+    val binds = new Bindings[String, Int]
 
     case class Assignment(sym:Symbol) {
-      def :=(value:Any):Function0[Unit] = (() => set(sym, value))
+      def :=(v:String):Function0[Unit] = (() => binds.set(sym, v))
+      def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
     }
 
     case class BinaryRelation(sym:Symbol) {
-      def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs) // equals
+      def ===(rhs:Int):Function0[Boolean] = (() => binds.num(sym) == rhs)     // equals
+      def ===(rhs:String):Function0[Boolean] = (() => binds.atom(sym) == rhs) // equals
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
@@ -52,7 +63,7 @@ package fogus.baysick {
        *
        */
       var appendage = lhs match {
-        case sym:Symbol => (() => binds(sym).toString)
+        case sym:Symbol => (() => binds.any(sym).toString)
         case fn:Function0[Any] => fn
         case _ => (() => lhs.toString)
       }
@@ -63,7 +74,7 @@ package fogus.baysick {
          * concatenate it to the result of the appendage function.
          */
         (() => rhs match {
-          case sym:Symbol => stringify(appendage(), binds(sym))
+          case sym:Symbol => stringify(appendage(), binds.any(sym))
           case fn:Function0[Any] => stringify(appendage(), fn())
           case _ => stringify(appendage(), rhs)
         })
@@ -74,9 +85,9 @@ package fogus.baysick {
      * Math Functions
      */
     def SQRT(i:BigInt):Function0[BigInt] = (() => Math.sqrt(i.intValue))
-    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(get(s).asInstanceOf[BigInt].intValue))
+    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds.num(s)))
     def ABS(i:BigInt):Function0[BigInt] = (() => Math.abs(i.intValue))
-    def ABS(s:Symbol):Function0[BigInt] = (() => Math.sqrt(get(s).asInstanceOf[BigInt].intValue))
+    def ABS(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds.num(s)))
 
     def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
 
@@ -122,8 +133,7 @@ package fogus.baysick {
           gotoLine(line + 10)
         }
         case PrintVariable(_, s:Symbol) => {
-          val value = binds(s)
-          println(value)
+          println(binds.any(s))
           gotoLine(line + 10)
         }
         case Input(_, name) => {
@@ -131,10 +141,10 @@ package fogus.baysick {
 
           // Temporary hack
           try {
-            binds(name) = BigInt(entry)
+            binds.set(name, java.lang.Integer.parseInt(entry))
           }
           catch {
-            case _ => binds(name) = entry
+            case _ => binds.set(name, entry)
           }
 
           gotoLine(line + 10)
