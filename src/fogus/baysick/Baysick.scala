@@ -17,7 +17,7 @@ package fogus.baysick {
       private val atoms = HashMap[Symbol, T]()
       private val numerics = HashMap[Symbol, U]()
 
-      def set(k:Symbol, v:T :< T) = atoms(k) = v
+      def set(k:Symbol, v:T) = atoms(k) = v
       def set(k:Symbol, v:U) = numerics(k) = v
       def atom(k:Symbol):T = atoms(k)
       def num(k:Symbol):U = numerics(k)
