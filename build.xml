@@ -97,8 +97,7 @@
             destdir="${classes.home}"
             target="jvm-1.5"
             force="changed"
-            deprecation="on"
-            unchecked="on">
+            deprecation="on">
 
       <include name="**/*.scala"/>
 

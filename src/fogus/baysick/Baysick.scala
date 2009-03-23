@@ -13,6 +13,16 @@ package fogus.baysick {
     case class If(num:Int, fn:Function0[Boolean], thenJmp:Int) extends BasicLine
     case class End(num: Int) extends BasicLine
 
+    class Bindings {
+      private val strings = new HashMap[Symbol, String]
+      private val numbers = new HashMap[Symbol, Int]
+
+      def set(k:Symbol, v:String) = strings(k) = v
+      def set(k:Symbol, v:Int) = numbers(k) = v
+      def str(k:Symbol):String = strings(k)
+      def num(k:Symbol):Int = numbers(k)
+    }
+
     val lines = new HashMap[Int, BasicLine]
     val binds = new HashMap[Symbol, Any]
 
@@ -23,30 +33,8 @@ package fogus.baysick {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
-    trait Numerical {
-      implicit def Any2BigInt(a:Any) = a.asInstanceOf[BigInt]
-
-      def getLHS():Any
-
-      var lhs:Function0[BigInt] = getLHS() match {
-        case s:Symbol => (() => get(s).asInstanceOf[BigInt])
-        case fn:Function0[BigInt] => fn
-      }
-    }
-
-    case class MathFunctions(l:Any) extends Numerical {
-      def getLHS() = l
-    }
-
-    /**
-     * BinaryRelation is meant to handle the cases where two things are check
-     * for a binary relation (limited to equalities).
-     */
-    case class BinaryRelation(l:Any) extends Numerical {
-      def getLHS() = l
-
-      def ===(rhs:BigInt):Function0[Boolean] = (() => lhs() == rhs)     // equals
-      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= get(rhs)) // lteq
+    case class BinaryRelation(sym:Symbol) {
+      def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs) // equals
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
@@ -177,6 +165,5 @@ package fogus.baysick {
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(sym)
-    implicit def fnOfInt2BinaryRelation(fn:Function0[BigInt]) = BinaryRelation(fn)
   }
 }
