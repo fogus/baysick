@@ -33,6 +33,10 @@ package fogus.baysick {
 
     def stringify(x:Any*):String = x.mkString("")
 
+    /**
+     * Appendr allows for the stringing together of expressions using the
+     * `%` function.
+     */
     case class Appendr(lhs:Any) {
       /**
        * <code>appendage</code> refers to the LHS value to be appended, <b>at
