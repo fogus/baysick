@@ -59,8 +59,13 @@ package fogus.baysick {
       }
     }
 
+    /**
+     * Math Functions
+     */
     def SQRT(i:BigInt):Function0[BigInt] = (() => Math.sqrt(i.intValue))
-    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds(s).asInstanceOf[BigInt].intValue))
+    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(get(s).asInstanceOf[BigInt].intValue))
+    def ABS(i:BigInt):Function0[BigInt] = (() => Math.abs(i.intValue))
+    def ABS(s:Symbol):Function0[BigInt] = (() => Math.sqrt(get(s).asInstanceOf[BigInt].intValue))
 
     def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
 
