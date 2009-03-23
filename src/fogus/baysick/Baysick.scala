@@ -23,9 +23,19 @@ package fogus.baysick {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
-    case class BinaryRelation(l:Any) {
+    trait Numerical {
       implicit def Any2BigInt(a:Any) = a.asInstanceOf[BigInt]
+    }
 
+    case class MathFunctions(l:Any) extends Numerical {
+
+    }
+
+    /**
+     * BinaryRelation is meant to handle the cases where two things are check
+     * for a binary relation (limited to equalities).
+     */
+    case class BinaryRelation(l:Any) extends Numerical {
       var lhs:Function0[BigInt] = l match {
         case s:Symbol => (() => get(s))
         case fn:Function0[BigInt] => fn
