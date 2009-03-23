@@ -19,7 +19,7 @@ package fogus.baysick {
     def get(name:Symbol):Any = binds(name)
     def set(name:Symbol, value:Any) = binds(name) = value
 
-    case class Assignr(sym:Symbol) {
+    case class Assignment(sym:Symbol) {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
@@ -153,7 +153,7 @@ package fogus.baysick {
 
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def toAppendr(key:Any) = Appendr(key)
-    implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
+    implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(sym)
   }
 }
