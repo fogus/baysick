@@ -23,8 +23,16 @@ package fogus.baysick {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
-    case class BinaryRelation(sym:Symbol) {
-      def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs) // equals
+    case class BinaryRelation(l:Any) {
+      implicit def Any2BigInt(a:Any) = a.asInstanceOf[BigInt]
+
+      var lhs:Function0[BigInt] = l match {
+        case s:Symbol => (() => get(s))
+        case fn:Function0[BigInt] => fn
+      }
+
+      def ===(rhs:BigInt):Function0[Boolean] = (() => lhs() == rhs)     // equals
+      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= get(rhs)) // lteq
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
@@ -155,5 +163,6 @@ package fogus.baysick {
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(sym)
+    implicit def fnOfInt2BinaryRelation(fn:Function0[BigInt]) = BinaryRelation(fn)
   }
 }
