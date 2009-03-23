@@ -117,7 +117,7 @@ object SquareRoot extends Baysick {
     RUN
   }
 }
-
+/*
 object Lunar extends Baysick {
   def main(args:Array[String]) = {
     10 PRINT "Welcome to Baysick Lunar Lander v0.0.1"
@@ -152,3 +152,4 @@ object Lunar extends Baysick {
     RUN
   }
 }
+*/

@@ -25,10 +25,17 @@ package fogus.baysick {
 
     trait Numerical {
       implicit def Any2BigInt(a:Any) = a.asInstanceOf[BigInt]
+
+      def getLHS():Any
+
+      var lhs:Function0[BigInt] = getLHS() match {
+        case s:Symbol => (() => get(s).asInstanceOf[BigInt])
+        case fn:Function0[BigInt] => fn
+      }
     }
 
     case class MathFunctions(l:Any) extends Numerical {
-
+      def getLHS() = l
     }
 
     /**
@@ -36,10 +43,7 @@ package fogus.baysick {
      * for a binary relation (limited to equalities).
      */
     case class BinaryRelation(l:Any) extends Numerical {
-      var lhs:Function0[BigInt] = l match {
-        case s:Symbol => (() => get(s))
-        case fn:Function0[BigInt] => fn
-      }
+      def getLHS() = l
 
       def ===(rhs:BigInt):Function0[Boolean] = (() => lhs() == rhs)     // equals
       def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= get(rhs)) // lteq
