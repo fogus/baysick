@@ -27,7 +27,7 @@ package fogus.baysick {
       def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs) // equals
     }
 
-    case class Jumpr(num:Int, fn:Function0[Boolean]) {
+    case class Branch(num:Int, fn:Function0[Boolean]) {
       def THEN(loc:Int) = lines(num) = If(num, fn, loc)
     }
 
@@ -96,7 +96,7 @@ package fogus.baysick {
       }
 
       object IF {
-        def apply(fn:Function0[Boolean]) = Jumpr(num, fn)
+        def apply(fn:Function0[Boolean]) = Branch(num, fn)
       }
     }
 
