@@ -23,8 +23,8 @@ package fogus.baysick {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
     }
 
-    case class Comparer(sym:Symbol) {
-      def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs)
+    case class BinaryRelation(sym:Symbol) {
+      def ===(rhs:BigInt):Function0[Boolean] = (() => get(sym) == rhs) // equals
     }
 
     case class Jumpr(num:Int, fn:Function0[Boolean]) {
@@ -154,6 +154,6 @@ package fogus.baysick {
     implicit def int2LineBuilder(i: Int) = LineBuilder(i)
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignr(sym:Symbol) = Assignr(sym)
-    implicit def symbol2Comparer(sym:Symbol) = Comparer(sym)
+    implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(sym)
   }
 }
