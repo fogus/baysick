@@ -24,10 +24,7 @@ package fogus.baysick {
     }
 
     val lines = new HashMap[Int, BasicLine]
-    val binds = new HashMap[Symbol, Any]
-
-    def get(name:Symbol):Any = binds(name)
-    def set(name:Symbol, value:Any) = binds(name) = value
+    val binds = new Bindings()
 
     case class Assignment(sym:Symbol) {
       def :=(value:Any):Function0[Unit] = (() => set(sym, value))
