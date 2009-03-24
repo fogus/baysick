@@ -28,6 +28,10 @@ package fogus.baysick {
    * The functions below build a map of functions representing the program
    * expressions, variable access, and jumps keyed on the Int line number.
    *
+   * @todo
+   * 1.  Add FOR .. NEXT form
+   * 2.  Get a life
+   *
    */
   class Baysick {
     abstract sealed class BasicLine
@@ -104,7 +108,6 @@ package fogus.baysick {
       def +(rhs:Function0[Int]):Function0[Int] = (() => lhs() + rhs())
       def -(rhs:Symbol):Function0[Int] = (() => lhs() - binds.num(rhs))
       def -(rhs:Function0[Int]):Function0[Int] = (() => lhs() - rhs())
-
     }
 
     /**
@@ -264,6 +267,7 @@ package fogus.baysick {
         }
         case Goto(_, to) => gotoLine(to)
         case End(_) => {
+          println()
           println("BREAK IN LINE " + line)
         }
       }
