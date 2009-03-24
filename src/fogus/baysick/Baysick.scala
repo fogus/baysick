@@ -1,3 +1,10 @@
+/**
+    #######        ##      ##    ##    ######     ####     ######     ##   ##
+    ##    ##      ####      ##  ##    ##           ##     ##    ##    ##  ##
+    #######      ##  ##       ##       ######      ##     ##          ####
+    ##    ##    ########      ##            ##     ##     ##    ##    ##  ##
+    #######    ##      ##     ##       ######     ####     ######     ##   ##
+ */
 package fogus.baysick {
   import scala.collection.mutable.HashMap
 
@@ -31,6 +38,9 @@ package fogus.baysick {
    * @todo
    * 1.  Add FOR .. NEXT form
    * 2.  Get a life
+   *
+   * @notes
+   * Thanks to Szymon Jachim for the motivation to do this.
    *
    */
   class Baysick {
