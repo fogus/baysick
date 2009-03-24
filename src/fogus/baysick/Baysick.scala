@@ -17,13 +17,9 @@ package fogus.baysick {
       val atoms = HashMap[Symbol, T]()
       val numerics = HashMap[Symbol, U]()
 
-      def set[X >: T with U](k:Symbol, v:X) = {
-        println("              Setting " + k + " to " + v)
-
-        v match {
-          case u:U => numerics(k) = u
-          case t:T => atoms(k) = t
-        }
+      def set[X >: T with U](k:Symbol, v:X) = v match {
+        case u:U => numerics(k) = u
+        case t:T => atoms(k) = t
       }
       def atom(k:Symbol):T = atoms(k)
       def num(k:Symbol):U = numerics(k)
@@ -44,9 +40,7 @@ package fogus.baysick {
     case class Assignment(sym:Symbol) {
       def :=(v:String):Function0[Unit] = (() => binds.set(sym, v))
       def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
-      def :=(v:Function0[Int]):Function0[Unit] = {
-        (() => binds.set(sym, v()))
-      }
+      def :=(v:Function0[Int]):Function0[Unit] = (() => binds.set(sym, v()))
     }
 
     case class MathFunction(lhs:Function0[Int]) {
