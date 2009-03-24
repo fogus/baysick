@@ -38,10 +38,19 @@ package fogus.baysick {
     case class If(num:Int, fn:Function0[Boolean], thenJmp:Int) extends BasicLine
     case class End(num: Int) extends BasicLine
 
+    /**
+     * Bindings holds the two types of values provided, atoms and numerics.
+     * It takes a type parameter on initialization corresponding to the
+     * actual type.
+     */
     class Bindings[T,U] {
       val atoms = HashMap[Symbol, T]()
       val numerics = HashMap[Symbol, U]()
 
+      /**
+       * set uses a little hack to allow the storage of either one type or
+       * another, but none other.
+       */
       def set[X >: T with U](k:Symbol, v:X) = v match {
         case u:U => numerics(k) = u
         case t:T => atoms(k) = t
@@ -49,6 +58,11 @@ package fogus.baysick {
       def atom(k:Symbol):T = atoms(k)
       def num(k:Symbol):U = numerics(k)
 
+      /**
+       * Technically, you can have two variables with the same name with
+       * different types at the same time, but for this version that does
+       * not come into play.
+       */
       def any(k:Symbol):Any = {
         (atoms.get(k), numerics.get(k)) match {
           case (Some(x), None) => x
