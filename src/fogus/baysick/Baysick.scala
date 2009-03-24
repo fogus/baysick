@@ -123,6 +123,12 @@ package fogus.baysick {
     }
 
     /**
+     * Branch provides the THEN part of an IF form which creates the If class
+     * with the appropriate branching components.
+     *
+     * @arg num The line number of the IF form
+     * @arg fn  The boolean function determining where the branch goes
+     * @arg loc The THEN jump line number
      *
      */
     case class Branch(num:Int, fn:Function0[Boolean]) {
