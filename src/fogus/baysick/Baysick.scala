@@ -14,11 +14,13 @@ package fogus.baysick {
     case class End(num: Int) extends BasicLine
 
     class Bindings[T,U] {
-      private val atoms = HashMap[Symbol, T]()
-      private val numerics = HashMap[Symbol, U]()
+      val atoms = HashMap[Symbol, T]()
+      val numerics = HashMap[Symbol, U]()
 
-      def set(k:Symbol, v:T) = atoms(k) = v
-      def set(k:Symbol, v:U) = numerics(k) = v
+      def set[X >: T with U](k:Symbol, v:X) = v match {
+        case u:U => numerics(k) = u
+        case t:T => atoms(k) = t
+      }
       def atom(k:Symbol):T = atoms(k)
       def num(k:Symbol):U = numerics(k)
 
@@ -27,7 +29,7 @@ package fogus.baysick {
           case (Some(x), None) => x
           case (None, Some(y)) => y
           case (None, None) => None
-          case (Some(x), Some(y)) => x
+          case (Some(x), Some(y)) => Some(x,y)
         }
       }
     }
@@ -142,6 +144,7 @@ package fogus.baysick {
           // Temporary hack
           try {
             binds.set(name, java.lang.Integer.parseInt(entry))
+            println(binds.numerics)
           }
           catch {
             case _ => binds.set(name, entry)
