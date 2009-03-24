@@ -14,6 +14,17 @@ package fogus.baysick {
    * <code>SQRT(expression)</code>
    * <code>ABS(expression)</code>
    *
+   * It also provides simple math operators <code>* / - +</code> taking the
+   * form:
+   *
+   * <code>expression op expression</code>
+   *
+   * Also provided are a few relation operators <code>< > <= >= ===</code>
+   * taking the same structure as above.
+   *
+   * Variables are also expressions and are prepended by a single quote
+   * (e.g. 'var).
+   *
    */
   class Baysick {
     abstract sealed class BasicLine
@@ -59,6 +70,7 @@ package fogus.baysick {
 
     case class MathFunction(lhs:Function0[Int]) {
       def *(rhs:Int):Function0[Int] = (() => lhs() * rhs)
+      def *(rhs:Function0[Int]):Function0[Int] = (() => lhs() * rhs())
       def /(rhs:Int):Function0[Int] = (() => lhs() / rhs)
       def /(rhs:Function0[Int]):Function0[Int] = (() => lhs() / rhs())
       def +(rhs:Symbol):Function0[Int] = (() => lhs() + binds.num(rhs))
@@ -72,6 +84,8 @@ package fogus.baysick {
       def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)
       def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)
       def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs))
+      def >=(rhs:Int):Function0[Boolean] = (() => lhs() >= rhs)
+      def >=(rhs:Symbol):Function0[Boolean] = (() => lhs() >= binds.num(rhs))
       def <(rhs:Int):Function0[Boolean] = (() => lhs() < rhs)
       def >(rhs:Int):Function0[Boolean] = (() => lhs() > rhs)
     }
