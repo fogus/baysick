@@ -49,6 +49,9 @@ package fogus.baysick {
       def /(rhs:Function0[Int]):Function0[Int] = (() => lhs() / rhs())
       def +(rhs:Symbol):Function0[Int] = (() => lhs() + binds.num(rhs))
       def +(rhs:Function0[Int]):Function0[Int] = (() => lhs() + rhs())
+      def -(rhs:Symbol):Function0[Int] = (() => lhs() - binds.num(rhs))
+      def -(rhs:Function0[Int]):Function0[Int] = (() => lhs() - rhs())
+
     }
 
     case class BinaryRelation(lhs:Function0[Int]) {
