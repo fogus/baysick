@@ -159,7 +159,6 @@ package fogus.baysick {
           // Temporary hack
           try {
             binds.set(name, java.lang.Integer.parseInt(entry))
-            println(binds.numerics)
           }
           catch {
             case _ => binds.set(name, entry)
