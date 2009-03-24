@@ -215,7 +215,9 @@ package fogus.baysick {
     }
 
     /**
-     *
+     * This is the runtime evaluator of the built Scala classes from the
+     * original BASIC forms.  Currently, lines can only be incremented by
+     * 10, otherwise you program might not act the way you expect.
      */
     private def gotoLine(line: Int) {
       lines(line) match {
