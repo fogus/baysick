@@ -25,6 +25,9 @@ package fogus.baysick {
    * Variables are also expressions and are prepended by a single quote
    * (e.g. 'var).
    *
+   * The functions below build a map of functions representing the program
+   * expressions, variable access, and jumps keyed on the Int line number.
+   *
    */
   class Baysick {
     abstract sealed class BasicLine
@@ -76,12 +79,22 @@ package fogus.baysick {
     val lines = new HashMap[Int, BasicLine]
     val binds = new Bindings[String, Int]
 
+    /**
+     * The Assignment class is used by the `symbol2Assignment` implicit to
+     * stand-in for a Scala symbol in the LET form.  This class returns
+     * a function of () => Unit that does the appropriate binding.
+     */
     case class Assignment(sym:Symbol) {
       def :=(v:String):Function0[Unit] = (() => binds.set(sym, v))
       def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
       def :=(v:Function0[Int]):Function0[Unit] = (() => binds.set(sym, v()))
     }
 
+    /**
+     * The MathFunction class is used by the `symbol2MathFunction` and
+     * `fnOfInt2MathFunction` implicits to stand in for Scala symbols and
+     * functions of type () => Int, the latter being constructed at run-time.
+     */
     case class MathFunction(lhs:Function0[Int]) {
       def *(rhs:Int):Function0[Int] = (() => lhs() * rhs)
       def *(rhs:Function0[Int]):Function0[Int] = (() => lhs() * rhs())
@@ -94,6 +107,11 @@ package fogus.baysick {
 
     }
 
+    /**
+     * The BinaryRelation class is used by the `symbol2BinaryRelation` and
+     * `fnOfInt2BinaryRelation` implicits to stand in for Scala symbols and
+     * functions of type () => Int, the latter being constructed at run-time.
+     */
     case class BinaryRelation(lhs:Function0[Int]) {
       def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)
       def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)
@@ -104,6 +122,9 @@ package fogus.baysick {
       def >(rhs:Int):Function0[Boolean] = (() => lhs() > rhs)
     }
 
+    /**
+     *
+     */
     case class Branch(num:Int, fn:Function0[Boolean]) {
       def THEN(loc:Int) = lines(num) = If(num, fn, loc)
     }
