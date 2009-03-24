@@ -40,10 +40,21 @@ package fogus.baysick {
     case class Assignment(sym:Symbol) {
       def :=(v:String):Function0[Unit] = (() => binds.set(sym, v))
       def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
+      def :=(v:Function0[Int]):Function0[Unit] = (() => binds.set(sym, v()))
+    }
+
+    case class MathFunction(lhs:Function0[Int]) {
+      def *(rhs:Int):Function0[Int] = (() => lhs() * rhs)
+      def /(rhs:Int):Function0[Int] = (() => lhs() / rhs)
+      def /(rhs:Function0[Int]):Function0[Int] = (() => lhs() / rhs())
+      def +(rhs:Symbol):Function0[Int] = (() => lhs() + binds.num(rhs))
+      def +(rhs:Function0[Int]):Function0[Int] = (() => lhs() + rhs())
     }
 
     case class BinaryRelation(lhs:Function0[Int]) {
-      def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)     // equals
+      def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)     // eq
+      def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)       // theq
+      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs))       // theq
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
@@ -175,5 +186,7 @@ package fogus.baysick {
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(() => binds.num(sym))
     implicit def fnOfInt2BinaryRelation(fn:Function0[Int]) = BinaryRelation(fn)
+    implicit def symbol2MathFunction(sym:Symbol) = MathFunction(() => binds.num(sym))
+    implicit def fnOfInt2MathFunction(fn:Function0[Int]) = MathFunction(fn)
   }
 }
