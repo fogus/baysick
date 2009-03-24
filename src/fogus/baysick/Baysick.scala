@@ -174,5 +174,6 @@ package fogus.baysick {
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(() => binds.num(sym))
+    implicit def fnOfInt2BinaryRelation(fn:Function0[Int]) = BinaryRelation(fn)
   }
 }
