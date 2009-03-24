@@ -85,10 +85,10 @@ package fogus.baysick {
     /**
      * Math Functions
      */
-    def SQRT(i:BigInt):Function0[BigInt] = (() => Math.sqrt(i.intValue))
-    def SQRT(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds.num(s)))
-    def ABS(i:BigInt):Function0[BigInt] = (() => Math.abs(i.intValue))
-    def ABS(s:Symbol):Function0[BigInt] = (() => Math.sqrt(binds.num(s)))
+    def SQRT(i:Int):Function0[Int] = (() => Math.sqrt(i.intValue))
+    def SQRT(s:Symbol):Function0[Int] = (() => Math.sqrt(binds.num(s)))
+    def ABS(i:Int):Function0[Int] = (() => Math.abs(i.intValue))
+    def ABS(s:Symbol):Function0[Int] = (() => Math.sqrt(binds.num(s)))
 
     def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
 
