@@ -42,9 +42,30 @@ package fogus.baysick {
       def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
     }
 
-    case class BinaryRelation(sym:Symbol) {
-      def ===(rhs:Int):Function0[Boolean] = (() => binds.num(sym) == rhs)     // equals
-      def ===(rhs:String):Function0[Boolean] = (() => binds.atom(sym) == rhs) // equals
+    trait Numerical {
+      def getLHS():Any
+
+      var lhs:Function0[Int] = getLHS() match {
+        case s:Symbol => (() => binds.num(s))
+        case fn:Function0[Int] => fn
+      }
+    }
+
+    case class MathFunctions(l:Any) {
+      def getLHS() = l
+    }
+
+    /**
+     * BinaryRelation is meant to handle the cases where two things are check
+     * for a binary relation (limited to equalities).
+     */
+    abstract class BinaryRelation(l:Any) {
+      def lhs()
+      def getLHS() = l
+
+      def ===(rhs:Int):Function0[Boolean] = (() => lhs() == rhs)     // equals
+      def ===(rhs:String):Function0[Boolean] = (() => lhs() == rhs) // equals
+      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs)) // lteq
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
@@ -175,5 +196,6 @@ package fogus.baysick {
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(sym)
+    implicit def fnOfInt2BinaryRelation(fn:Function0[Int]) = BinaryRelation(fn)
   }
 }
