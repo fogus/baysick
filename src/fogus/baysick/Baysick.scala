@@ -55,9 +55,11 @@ package fogus.baysick {
     }
 
     case class BinaryRelation(lhs:Function0[Int]) {
-      def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)     // eq
-      def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)       // theq
-      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs))       // theq
+      def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)
+      def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)
+      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs))
+      def <(rhs:Int):Function0[Boolean] = (() => lhs() < rhs)
+      def >(rhs:Int):Function0[Boolean] = (() => lhs() > rhs)
     }
 
     case class Branch(num:Int, fn:Function0[Boolean]) {
