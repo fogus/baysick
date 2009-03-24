@@ -177,6 +177,16 @@ package fogus.baysick {
 
     def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
 
+    /**
+     * LineBuilder is the jump off point for the line number syntax of
+     * BASIC expressions.  Simply put, the `int2LineBuilder` implict
+     * puts an instance of this class in place when it finds an Int
+     * followed by one of the provided methods.  That is, this *only* handles
+     * the forms that follow a line number and no other forms.  If you need to
+     * add new functions that can be put elsewhere, then follow the form
+     * used by SQRT and ABS.  For functions that can go *anywhere*, they should
+     * be handled here and as separate functions as SQRT.
+     */
     case class LineBuilder(num: Int) {
       def END() = lines(num) = End(num)
 
@@ -204,6 +214,9 @@ package fogus.baysick {
       }
     }
 
+    /**
+     *
+     */
     private def gotoLine(line: Int) {
       lines(line) match {
         case PrintNumber(_, number:BigInt) => {
