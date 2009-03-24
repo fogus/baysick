@@ -1,6 +1,20 @@
 package fogus.baysick {
   import scala.collection.mutable.HashMap
 
+  /**
+   * Implements a simplified, integer-only, dialect of the BASIC programming
+   * language.  It implements a number of the BASIC forms and functions
+   * including:
+   *
+   * <code>LET var := expression</code>
+   * <code>PRINT expression [% expression]+</code>
+   * <code>INPUT var</code>
+   * <code>GOTO number</code>
+   * <code>IF expression op expression THEN number</code>
+   * <code>SQRT(expression)</code>
+   * <code>ABS(expression)</code>
+   *
+   */
   class Baysick {
     abstract sealed class BasicLine
     case class PrintString(num: Int, s: String) extends BasicLine

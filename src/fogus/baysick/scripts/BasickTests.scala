@@ -127,7 +127,7 @@ object Lunar extends Baysick {
     50 LET ('mass := 1000)
 
     60 PRINT "You are a in control of a lunar lander."
-    70 PRINT "You are drifiting towards the surface of the moon."
+    70 PRINT "You are drifting towards the surface of the moon."
     80 PRINT "Each turn you must decide how much fuel to burn."
     90 PRINT "To accelerate enter a positive number, to decelerate a negative"
 
