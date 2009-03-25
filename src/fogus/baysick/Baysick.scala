@@ -36,7 +36,8 @@ package fogus.baysick {
    * expressions, variable access, and jumps keyed on the Int line number.
    *
    * @todo
-   * 1.  Add FOR .. NEXT form
+   * 1.  Add GOSUB .. RETURN
+   *     +  w/ subroutine map and return stack
    * 2.  Get a life
    *
    * @notes
