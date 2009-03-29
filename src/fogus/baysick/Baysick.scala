@@ -7,6 +7,7 @@
  */
 package fogus.baysick {
   import scala.collection.mutable.HashMap
+  import scala.collection.mutable.Stack
 
   /**
    * Implements a simplified, integer-only, dialect of the BASIC programming
@@ -93,6 +94,7 @@ package fogus.baysick {
 
     val lines = new HashMap[Int, BasicLine]
     val binds = new Bindings[String, Int]
+    val returnStack = new Stack[Int]
 
     /**
      * The Assignment class is used by the `symbol2Assignment` implicit to
