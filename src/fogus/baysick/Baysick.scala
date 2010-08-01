@@ -186,8 +186,8 @@ package fogus.baysick {
     /**
      * Math Functions
      */
-    def SQRT(i:Int):Function0[Int] = (() => Math.sqrt(i.intValue))
-    def SQRT(s:Symbol):Function0[Int] = (() => Math.sqrt(binds.num(s)))
+    def SQRT(i:Int):Function0[Int] = (() => Math.sqrt(i.intValue).intValue)
+    def SQRT(s:Symbol):Function0[Int] = (() => Math.sqrt(binds.num(s)).intValue)
     def ABS(i:Int):Function0[Int] = (() => Math.abs(i))
     def ABS(s:Symbol):Function0[Int] = (() => Math.abs(binds.num(s)))
 
