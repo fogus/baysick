@@ -2,6 +2,7 @@
 
 ### Here is a small example:
 
+```scala
     object SquareRoot extends Baysick {
       def main(args:Array[String]) = {
         10 PRINT "Enter a number"
@@ -12,9 +13,11 @@
         RUN
       }
     }
+```
 
 ### Here is a larger example
 
+```scala
     object Lunar extends Baysick {
       def main(args:Array[String]) = {
         10 PRINT "Welcome to Baysick Lunar Lander v0.0.1"
@@ -49,5 +52,6 @@
         RUN
       }
     }
+```
 
 Enjoy.
