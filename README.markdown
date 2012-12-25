@@ -1,4 +1,4 @@
-## BAYSICK - a DSL for Scala implementing a subset of BASIC
+## BAYSICK - an embedded Insane-specific Language for Scala implementing a subset of BASIC
 
 ### Here is a small example:
 
