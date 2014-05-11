@@ -1,3 +1,15 @@
+<!--
+Copyright (c) 2010-2014 Michael Fogus, http://www.fogus.me
+
+Licensed under The MIT License
+Re-distributions of files must retain the above copyright notice.
+
+ #######        ##      ##    ##    ######     ####     ######     ##   ##
+ ##    ##      ####      ##  ##    ##           ##     ##    ##    ##  ##
+ #######      ##  ##       ##       ######      ##     ##          ####
+ ##    ##    ########      ##            ##     ##     ##    ##    ##  ##
+ #######    ##      ##     ##       ######     ####     ######     ##   ##
+-->
 <project name="Baysick" default="dist" basedir=".">
   <property environment="env"/>
 

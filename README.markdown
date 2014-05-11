@@ -57,3 +57,9 @@
 Enjoy.
 
 *note: [The BASIC programming language is 50 years old](https://www.dartmouth.edu/basicfifty/)*
+
+## License
+
+Copyright 2010-2014, [Michael Fogus](http://www.fogus.me)
+Licensed under the MIT License.  
+Redistributions of files must retain the above copyright notice.
