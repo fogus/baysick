@@ -1,3 +1,6 @@
+.idea
+target
+project
 classes
 bin
 dist
@@ -5,3 +8,4 @@ dist
 .classpath
 .manager
 .settings
+*~
