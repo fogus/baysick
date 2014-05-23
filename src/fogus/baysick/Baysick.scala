@@ -196,7 +196,7 @@ package fogus.baysick {
     def ABS(i:Int):Function0[Int] = (() => Math.abs(i))
     def ABS(s:Symbol):Function0[Int] = (() => Math.abs(binds.num(s)))
 
-    def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
+    def RUN() = gotoLine(lines.keys.min)
 
     /**
      * LineBuilder is the jump off point for the line number syntax of
