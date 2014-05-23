@@ -11,10 +11,9 @@
  *  #######    ##      ##     ##       ######     ####     ######     ##   ##
  **/
 package fogus.baysick {
-  import scala.collection.mutable.HashMap
-  import scala.collection.mutable.Stack
+import scala.collection.mutable
 
-  /**
+/**
    * Implements a simplified, integer-only, dialect of the BASIC programming
    * language.  It implements a number of the BASIC forms and functions
    * including:
@@ -46,20 +45,20 @@ package fogus.baysick {
    *     +  w/ subroutine map and return stack
    * 2.  Get a life
    *
-   * @notes
+   * @note
    * Thanks to Szymon Jachim for the motivation to do this.
    *
    */
   class Baysick {
     abstract sealed class BasicLine
     case class PrintString(num: Int, s: String) extends BasicLine
-    case class PrintResult(num:Int, fn:Function0[String]) extends BasicLine
+    case class PrintResult(num:Int, fn:() => String) extends BasicLine
     case class PrintVariable(num: Int, s: Symbol) extends BasicLine
     case class PrintNumber(num: Int, number: BigInt) extends BasicLine
     case class Goto(num: Int, to: Int) extends BasicLine
     case class Input(num: Int, name: Symbol) extends BasicLine
-    case class Let(num:Int, fn:Function0[Unit]) extends BasicLine
-    case class If(num:Int, fn:Function0[Boolean], thenJmp:Int) extends BasicLine
+    case class Let(num:Int, fn:() => Unit) extends BasicLine
+    case class If(num:Int, fn:() => Boolean, thenJmp:Int) extends BasicLine
     case class End(num: Int) extends BasicLine
 
     /**
@@ -68,8 +67,8 @@ package fogus.baysick {
      * actual type.
      */
     class Bindings[T,U] {
-      val atoms = HashMap[Symbol, T]()
-      val numerics = HashMap[Symbol, U]()
+      val atoms = mutable.HashMap[Symbol, T]()
+      val numerics = mutable.HashMap[Symbol, U]()
 
       /**
        * set uses a little hack to allow the storage of either one type or
@@ -97,9 +96,9 @@ package fogus.baysick {
       }
     }
 
-    val lines = new HashMap[Int, BasicLine]
+    val lines = new mutable.HashMap[Int, BasicLine]
     val binds = new Bindings[String, Int]
-    val returnStack = new Stack[Int]
+    val returnStack = new mutable.Stack[Int]
 
     /**
      * The Assignment class is used by the `symbol2Assignment` implicit to
@@ -107,9 +106,9 @@ package fogus.baysick {
      * a function of () => Unit that does the appropriate binding.
      */
     case class Assignment(sym:Symbol) {
-      def :=(v:String):Function0[Unit] = (() => binds.set(sym, v))
-      def :=(v:Int):Function0[Unit] = (() => binds.set(sym, v))
-      def :=(v:Function0[Int]):Function0[Unit] = (() => binds.set(sym, v()))
+      def :=(v:String):() => Unit = () => binds.set(sym, v)
+      def :=(v:Int):() => Unit = () => binds.set(sym, v)
+      def :=(v:() => Int):() => Unit = () => binds.set(sym, v())
     }
 
     /**
@@ -117,15 +116,15 @@ package fogus.baysick {
      * `fnOfInt2MathFunction` implicits to stand in for Scala symbols and
      * functions of type () => Int, the latter being constructed at run-time.
      */
-    case class MathFunction(lhs:Function0[Int]) {
-      def *(rhs:Int):Function0[Int] = (() => lhs() * rhs)
-      def *(rhs:Function0[Int]):Function0[Int] = (() => lhs() * rhs())
-      def /(rhs:Int):Function0[Int] = (() => lhs() / rhs)
-      def /(rhs:Function0[Int]):Function0[Int] = (() => lhs() / rhs())
-      def +(rhs:Symbol):Function0[Int] = (() => lhs() + binds.num(rhs))
-      def +(rhs:Function0[Int]):Function0[Int] = (() => lhs() + rhs())
-      def -(rhs:Symbol):Function0[Int] = (() => lhs() - binds.num(rhs))
-      def -(rhs:Function0[Int]):Function0[Int] = (() => lhs() - rhs())
+    case class MathFunction(lhs:() => Int) {
+      def *(rhs:Int):() => Int = () => lhs() * rhs
+      def *(rhs:() => Int):() => Int = () => lhs() * rhs()
+      def /(rhs:Int):() => Int = () => lhs() / rhs
+      def /(rhs:() => Int):() => Int = () => lhs() / rhs()
+      def +(rhs:Symbol):() => Int = () => lhs() + binds.num(rhs)
+      def +(rhs:() => Int):() => Int = () => lhs() + rhs()
+      def -(rhs:Symbol):() => Int = () => lhs() - binds.num(rhs)
+      def -(rhs:() => Int):() => Int = () => lhs() - rhs()
     }
 
     /**
@@ -133,26 +132,28 @@ package fogus.baysick {
      * `fnOfInt2BinaryRelation` implicits to stand in for Scala symbols and
      * functions of type () => Int, the latter being constructed at run-time.
      */
-    case class BinaryRelation(lhs:Function0[Int]) {
-      def ===(rhs:Int):Function0[Boolean] = (() => lhs()  == rhs)
-      def <=(rhs:Int):Function0[Boolean] = (() => lhs() <= rhs)
-      def <=(rhs:Symbol):Function0[Boolean] = (() => lhs() <= binds.num(rhs))
-      def >=(rhs:Int):Function0[Boolean] = (() => lhs() >= rhs)
-      def >=(rhs:Symbol):Function0[Boolean] = (() => lhs() >= binds.num(rhs))
-      def <(rhs:Int):Function0[Boolean] = (() => lhs() < rhs)
-      def >(rhs:Int):Function0[Boolean] = (() => lhs() > rhs)
+    case class BinaryRelation(lhs:() => Int) {
+      def ===(rhs:Int):() => Boolean = () => lhs() == rhs
+      def <=(rhs:Int):() => Boolean = () => lhs() <= rhs
+      def <=(rhs:Symbol):() => Boolean = () => lhs() <= binds.num(rhs)
+      def >=(rhs:Int):() => Boolean = () => lhs() >= rhs
+      def >=(rhs:Symbol):() => Boolean = () => lhs() >= binds.num(rhs)
+      def <(rhs:Int):() => Boolean = () => lhs() < rhs
+      def >(rhs:Int):() => Boolean = () => lhs() > rhs
     }
 
     /**
      * Branch provides the THEN part of an IF form which creates the If class
      * with the appropriate branching components.
      *
-     * @arg num The line number of the IF form
-     * @arg fn  The boolean function determining where the branch goes
-     * @arg loc The THEN jump line number
+     * @param num The line number of the IF form
+     * @param fn  The boolean function determining where the branch goes
      *
      */
-    case class Branch(num:Int, fn:Function0[Boolean]) {
+    case class Branch(num:Int, fn:() => Boolean) {
+      /**
+       * @param loc The THEN jump line number
+       */
       def THEN(loc:Int) = lines(num) = If(num, fn, loc)
     }
 
@@ -170,33 +171,33 @@ package fogus.baysick {
        *
        */
       var appendage = lhs match {
-        case sym:Symbol => (() => binds.any(sym).toString)
+        case sym:Symbol => () => binds.any(sym).toString
         case fn:Function0[Any] => fn
-        case _ => (() => lhs.toString)
+        case _ => () => lhs.toString
       }
 
-      def %(rhs:Any):Function0[String] = {
+      def %(rhs:Any):() => String = {
         /**
          * Check the type of the RHS.  For symbols, do a lookup, then
          * concatenate it to the result of the appendage function.
          */
-        (() => rhs match {
-          case sym:Symbol => stringify(appendage(), binds.any(sym))
-          case fn:Function0[Any] => stringify(appendage(), fn())
+        () => rhs match {
+          case sym: Symbol => stringify(appendage(), binds.any(sym))
+          case fn: Function0[Any] => stringify(appendage(), fn())
           case _ => stringify(appendage(), rhs)
-        })
+        }
       }
     }
 
     /**
      * Math Functions
      */
-    def SQRT(i:Int):Function0[Int] = (() => Math.sqrt(i.intValue).intValue)
-    def SQRT(s:Symbol):Function0[Int] = (() => Math.sqrt(binds.num(s)).intValue)
-    def ABS(i:Int):Function0[Int] = (() => Math.abs(i))
-    def ABS(s:Symbol):Function0[Int] = (() => Math.abs(binds.num(s)))
+    def SQRT(i:Int):() => Int = () => Math.sqrt(i.intValue).intValue
+    def SQRT(s:Symbol):() => Int = () => Math.sqrt(binds.num(s)).intValue
+    def ABS(i:Int):() => Int = () => Math.abs(i)
+    def ABS(s:Symbol):() => Int = () => Math.abs(binds.num(s))
 
-    def RUN() = gotoLine(lines.keys.toList.sort((l,r) => l < r).first)
+    def RUN() = gotoLine(lines.keys.toList.sorted.head)
 
     /**
      * LineBuilder is the jump off point for the line number syntax of
@@ -215,7 +216,7 @@ package fogus.baysick {
         def apply(str:String) = lines(num) = PrintString(num, str)
         def apply(number: BigInt) = lines(num) = PrintNumber(num, number)
         def apply(s: Symbol) = lines(num) = PrintVariable(num, s)
-        def apply(fn:Function0[String]) = lines(num) = PrintResult(num, fn)
+        def apply(fn:() => String) = lines(num) = PrintResult(num, fn)
       }
 
       object INPUT {
@@ -223,7 +224,7 @@ package fogus.baysick {
       }
 
       object LET {
-        def apply(fn:Function0[Unit]) = lines(num) = Let(num, fn)
+        def apply(fn:() => Unit) = lines(num) = Let(num, fn)
       }
 
       object GOTO {
@@ -231,7 +232,7 @@ package fogus.baysick {
       }
 
       object IF {
-        def apply(fn:Function0[Boolean]) = Branch(num, fn)
+        def apply(fn:() => Boolean) = Branch(num, fn)
       }
     }
 
@@ -259,14 +260,14 @@ package fogus.baysick {
           gotoLine(line + 10)
         }
         case Input(_, name) => {
-          var entry = readLine
+          val entry = readLine
 
           // Temporary hack
           try {
             binds.set(name, java.lang.Integer.parseInt(entry))
           }
           catch {
-            case _ => binds.set(name, entry)
+            case _: Throwable => binds.set(name, entry)
           }
 
           gotoLine(line + 10)
@@ -295,8 +296,8 @@ package fogus.baysick {
     implicit def toAppendr(key:Any) = Appendr(key)
     implicit def symbol2Assignment(sym:Symbol) = Assignment(sym)
     implicit def symbol2BinaryRelation(sym:Symbol) = BinaryRelation(() => binds.num(sym))
-    implicit def fnOfInt2BinaryRelation(fn:Function0[Int]) = BinaryRelation(fn)
+    implicit def fnOfInt2BinaryRelation(fn:() => Int) = BinaryRelation(fn)
     implicit def symbol2MathFunction(sym:Symbol) = MathFunction(() => binds.num(sym))
-    implicit def fnOfInt2MathFunction(fn:Function0[Int]) = MathFunction(fn)
+    implicit def fnOfInt2MathFunction(fn:() => Int) = MathFunction(fn)
   }
 }
